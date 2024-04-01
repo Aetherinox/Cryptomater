@@ -171,7 +171,7 @@ jobs:
           & $env:JAVA_HOME\bin\jmod.exe extract --dir jpackage-jmod "${env:JAVA_HOME}\jmods\jdk.jpackage.jmod"
           Get-ChildItem -Recurse -Path "jpackage-jmod" -File wixhelper.dll | Select-Object -Last 1 | Copy-Item -Destination "appdir"
       - name: Codesign
-        uses: skymatic/code-sign-action@v2
+        uses: skymatic/code-sign-action@v3
         with:
           certificate: ${{ secrets.WIN_CODESIGN_P12_BASE64 }}
           password: ${{ secrets.WIN_CODESIGN_P12_PW }}
@@ -229,7 +229,7 @@ jobs:
           JP_WIXWIZARD_RESOURCES: ${{ github.workspace }}/dist/win/resources # requires abs path, used in resources/main.wxs
           JP_WIXHELPER_DIR: ${{ github.workspace }}\appdir
       - name: Codesign MSI
-        uses: skymatic/code-sign-action@v2
+        uses: skymatic/code-sign-action@v3
         with:
           certificate: ${{ secrets.WIN_CODESIGN_P12_BASE64 }}
           password: ${{ secrets.WIN_CODESIGN_P12_PW }}
@@ -256,7 +256,7 @@ jobs:
           if-no-files-found: error
       - name: Publish .msi on GitHub Releases
         if: startsWith(github.ref, 'refs/tags/') && github.event_name == 'published'
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           fail_on_unmatched_files: true
           token: ${{ secrets.CRYPTOBOT_RELEASE_TOKEN }}
@@ -326,7 +326,7 @@ jobs:
           -ib installer/unsigned/Cryptomator-Installer.exe
           -o tmp/engine.exe
       - name: Codesign burn engine
-        uses: skymatic/code-sign-action@v2
+        uses: skymatic/code-sign-action@v3
         with:
           certificate: ${{ secrets.WIN_CODESIGN_P12_BASE64 }}
           password: ${{ secrets.WIN_CODESIGN_P12_PW }}
@@ -340,7 +340,7 @@ jobs:
           -ab tmp/engine.exe installer/unsigned/Cryptomator-Installer.exe
           -o installer/Cryptomator-Installer.exe
       - name: Codesign EXE
-        uses: skymatic/code-sign-action@v2
+        uses: skymatic/code-sign-action@v3
         with:
           certificate: ${{ secrets.WIN_CODESIGN_P12_BASE64 }}
           password: ${{ secrets.WIN_CODESIGN_P12_PW }}
@@ -367,7 +367,7 @@ jobs:
           if-no-files-found: error
       - name: Publish .msi on GitHub Releases
         if: startsWith(github.ref, 'refs/tags/') && github.event_name == 'published'
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           fail_on_unmatched_files: true
           token: ${{ secrets.CRYPTOBOT_RELEASE_TOKEN }}
@@ -397,7 +397,7 @@ jobs:
           cp msi/*.msi files
           cp exe/*.exe files
       - name: Upload to Kaspersky
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           protocol: ftps
           server: allowlist.kaspersky-labs.com
@@ -406,7 +406,7 @@ jobs:
           password: ${{ secrets.ALLOWLIST_KASPERSKY_PASSWORD }}
           local-dir: files/
       - name: Upload to Avast
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           protocol: ftp
           server: whitelisting.avast.com
